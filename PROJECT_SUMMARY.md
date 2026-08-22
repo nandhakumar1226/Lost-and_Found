@@ -1,7 +1,9 @@
 # 🎓 College Lost & Found Full-Stack Web Application — Project Summary & Handover Document
 
-## 🌐 Project Overview
-This project is an official campus lost and found web platform featuring automated smart matching, claim verification, student reporting, theme toggling, and administrative user/password management.
+## 🌐 Live Cloud Application Links
+
+* **Live Frontend Website**: [https://lost-and-found-indol-seven.vercel.app](https://lost-and-found-indol-seven.vercel.app)
+* **GitHub Repository**: [https://github.com/nandhakumar1226/Lost-and_Found](https://github.com/nandhakumar1226/Lost-and_Found)
 
 ---
 
