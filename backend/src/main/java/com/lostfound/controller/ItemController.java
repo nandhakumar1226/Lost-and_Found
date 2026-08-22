@@ -65,14 +65,24 @@ public class ItemController {
     @PutMapping("/{id}/status")
     public ResponseEntity<ItemResponseDTO> updateItemStatus(
             @PathVariable("id") String id,
-            @RequestParam("status") String status
+            @RequestParam("status") String status,
+            Authentication authentication
     ) {
-        return ResponseEntity.ok(itemService.updateItemStatus(id, status));
+        if (authentication == null) {
+            return ResponseEntity.status(401).build();
+        }
+        return ResponseEntity.ok(itemService.updateItemStatus(id, status, authentication.getName()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable("id") String id) {
-        itemService.deleteItem(id);
+    public ResponseEntity<Void> deleteItem(
+            @PathVariable("id") String id,
+            Authentication authentication
+    ) {
+        if (authentication == null) {
+            return ResponseEntity.status(401).build();
+        }
+        itemService.deleteItem(id, authentication.getName());
         return ResponseEntity.noContent().build();
     }
 }

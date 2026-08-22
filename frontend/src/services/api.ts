@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { AuthResponse, User, Item, Claim, MatchResult, AdminStats } from '../types';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -19,6 +19,20 @@ api.interceptors.request.use((config) => {
   return config;
 }, (error) => Promise.reject(error));
 
+// Response interceptor to handle 401 Unauthorized (JWT expiration)
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('college_lost_found_token');
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const authApi = {
   login: (data: { email: string; password: string }) =>
     api.post<AuthResponse>('/auth/login', data),
@@ -28,6 +42,9 @@ export const authApi = {
 
   getCurrentUser: () =>
     api.get<User>('/auth/me'),
+
+  resetPassword: (data: { email: string; phone: string; newPassword: string }) =>
+    api.post<User>('/auth/reset-password', data),
 };
 
 export const itemsApi = {
@@ -67,12 +84,6 @@ export const claimsApi = {
 
   getMyClaims: () =>
     api.get<Claim[]>('/claims/my'),
-
-  getAllClaims: () =>
-    api.get<Claim[]>('/claims'),
-
-  updateStatus: (claimId: number, status: string) =>
-    api.put<Claim>(`/claims/${claimId}/status`, null, { params: { status } }),
 };
 
 export const adminApi = {
@@ -87,6 +98,9 @@ export const adminApi = {
 
   updateUserRole: (userId: number, role: string) =>
     api.put<User>(`/admin/users/${userId}/role`, null, { params: { role } }),
+
+  updateUser: (userId: number, data: Partial<User> & { password?: string }) =>
+    api.put<User>(`/admin/users/${userId}`, data),
 
   getAllItems: () =>
     api.get<Item[]>('/admin/items'),

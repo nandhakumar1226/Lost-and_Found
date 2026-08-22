@@ -70,4 +70,21 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return new UserDTO(user);
     }
+
+    public UserDTO resetPassword(com.lostfound.dto.ResetPasswordRequest request) {
+        String cleanEmail = request.getEmail().toLowerCase().trim();
+        User user = userRepository.findByEmail(cleanEmail)
+                .orElseThrow(() -> new IllegalArgumentException("No account found with email address: " + cleanEmail));
+
+        String cleanPhone = request.getPhone().trim().replaceAll("\\D", "");
+        String userPhone = user.getPhone().trim().replaceAll("\\D", "");
+
+        if (!userPhone.equals(cleanPhone)) {
+            throw new IllegalArgumentException("Phone number verification failed. Details do not match registered records.");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        User updated = userRepository.save(user);
+        return new UserDTO(updated);
+    }
 }

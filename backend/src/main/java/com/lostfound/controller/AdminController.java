@@ -51,6 +51,14 @@ public class AdminController {
         return ResponseEntity.ok(adminService.updateUserRole(id, role));
     }
 
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserDTO> updateUser(
+            @PathVariable("id") Long id,
+            @RequestBody com.lostfound.dto.AdminUpdateUserDTO request
+    ) {
+        return ResponseEntity.ok(adminService.updateUser(id, request));
+    }
+
     @GetMapping("/items")
     public ResponseEntity<List<ItemResponseDTO>> getAllItems() {
         return ResponseEntity.ok(itemService.getAllItems());

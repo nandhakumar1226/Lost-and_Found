@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { authApi } from '../../services/api';
-import { School, LogIn, Key, Mail, Shield, UserCheck } from 'lucide-react';
+import { ForgotPasswordModal } from '../../components/common/ForgotPasswordModal';
+import { School, LogIn, Key, Mail, Shield, UserCheck, Sparkles } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [forgotModalOpen, setForgotModalOpen] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -40,56 +42,61 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl border border-slate-200 shadow-xl">
+    <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      
+      {/* Background ambient lighting */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 dark:bg-purple-500/20 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-md w-full space-y-7 glass-card p-8 sm:p-10 relative z-10 glow-box-indigo">
         
         {/* Header */}
-        <div className="text-center">
-          <div className="mx-auto w-14 h-14 bg-blue-700 text-white rounded-2xl flex items-center justify-center shadow-md mb-3">
-            <School className="w-8 h-8" />
+        <div className="text-center space-y-2">
+          <div className="mx-auto w-14 h-14 bg-gradient-to-tr from-indigo-600 via-blue-600 to-violet-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30 mb-4 transform hover:rotate-6 transition-transform">
+            <School className="w-7 h-7 text-white" />
           </div>
-          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-            College Lost & Found
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight font-display">
+            Welcome Back
           </h2>
-          <p className="mt-2 text-sm text-slate-600">
-            Sign in to report items, search found property, or track your claims.
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            Sign in to access your campus lost & found account.
           </p>
         </div>
 
         {/* Demo Fast Login Buttons */}
-        <div className="p-3.5 bg-blue-50 border border-blue-100 rounded-xl space-y-2">
-          <p className="text-xs font-semibold text-blue-900 flex items-center gap-1.5">
-            <UserCheck className="w-4 h-4 text-blue-700" />
-            Quick Demo Login Buttons:
+        <div className="p-4 bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 rounded-2xl space-y-2.5">
+          <p className="text-xs font-bold text-indigo-900 dark:text-indigo-300 flex items-center gap-2">
+            <UserCheck className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            Fast Demo Login Buttons:
           </p>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => handleQuickLogin('student@college.edu', 'student123')}
-              className="text-xs bg-white hover:bg-blue-100 text-blue-800 font-medium py-1.5 px-2.5 rounded-lg border border-blue-200 shadow-xs flex items-center justify-center gap-1"
+              className="text-xs bg-white dark:bg-slate-800 hover:bg-indigo-100/60 text-indigo-900 dark:text-indigo-200 font-bold py-2 px-3 rounded-xl border border-indigo-200/80 dark:border-indigo-700/80 shadow-xs flex items-center justify-center gap-1 transition-all"
             >
-              <span>Student Account</span>
+              <span>Student Demo</span>
             </button>
             <button
               type="button"
               onClick={() => handleQuickLogin('jegan@gmail.com', 'jegan123')}
-              className="text-xs bg-amber-100 hover:bg-amber-200 text-amber-900 font-semibold py-1.5 px-2.5 rounded-lg border border-amber-300 shadow-xs flex items-center justify-center gap-1"
+              className="text-xs bg-amber-100/80 dark:bg-amber-950/60 hover:bg-amber-200/80 text-amber-950 dark:text-amber-300 font-extrabold py-2 px-3 rounded-xl border border-amber-300/80 dark:border-amber-700/80 shadow-xs flex items-center justify-center gap-1 transition-all"
             >
-              <Shield className="w-3.5 h-3.5 text-amber-700" />
-              <span>Admin Account</span>
+              <Shield className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+              <span>Admin Demo</span>
             </button>
           </div>
         </div>
 
         {error && (
-          <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl">
+          <div className="p-3.5 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs font-semibold rounded-xl animate-fade-in">
             {error}
           </div>
         )}
 
-        <form className="mt-6 space-y-5" onSubmit={handleLogin}>
+        <form className="space-y-4" onSubmit={handleLogin}>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Email Address</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                 <Mail className="w-4 h-4" />
@@ -100,13 +107,22 @@ export const LoginPage: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="student@college.edu"
-                className="pl-10 w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                className="pl-10 w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">Password</label>
+              <button
+                type="button"
+                onClick={() => setForgotModalOpen(true)}
+                className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 hover:underline"
+              >
+                Forgot Password?
+              </button>
+            </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                 <Key className="w-4 h-4" />
@@ -117,7 +133,7 @@ export const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="pl-10 w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                className="pl-10 w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
             </div>
           </div>
@@ -125,22 +141,31 @@ export const LoginPage: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary py-3 text-base shadow-md"
+            className="w-full btn-primary py-3.5 text-sm font-bold shadow-lg shadow-indigo-600/30 mt-2"
           >
             {loading ? 'Authenticating...' : 'Sign In'}
-            <LogIn className="w-5 h-5 ml-1" />
+            <LogIn className="w-4 h-4 ml-1" />
           </button>
         </form>
 
-        <div className="text-center pt-2 border-t border-slate-100">
-          <p className="text-sm text-slate-600">
+        <div className="text-center pt-3 border-t border-slate-100 dark:border-slate-800">
+          <p className="text-xs text-slate-600 dark:text-slate-400">
             Don't have an account?{' '}
-            <Link to="/register" className="font-semibold text-blue-700 hover:underline">
+            <Link to="/register" className="font-extrabold text-indigo-600 dark:text-indigo-400 hover:underline">
               Create Student Account
             </Link>
           </p>
         </div>
       </div>
+
+      <ForgotPasswordModal
+        isOpen={forgotModalOpen}
+        onClose={() => setForgotModalOpen(false)}
+        onSuccess={(resetEmail) => {
+          setEmail(resetEmail);
+          setPassword('');
+        }}
+      />
     </div>
   );
 };

@@ -21,13 +21,16 @@ public class AdminService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final ClaimRepository claimRepository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     public AdminService(UserRepository userRepository,
                         ItemRepository itemRepository,
-                        ClaimRepository claimRepository) {
+                        ClaimRepository claimRepository,
+                        org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.claimRepository = claimRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public AdminDashboardStatsDTO getDashboardStats() {
@@ -79,6 +82,34 @@ public class AdminService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
 
         user.setRole(role.toUpperCase());
+        User saved = userRepository.save(user);
+        return new UserDTO(saved);
+    }
+
+    @Transactional
+    public UserDTO updateUser(Long userId, com.lostfound.dto.AdminUpdateUserDTO request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+
+        if (request.getName() != null && !request.getName().isBlank()) {
+            user.setName(request.getName().trim());
+        }
+        if (request.getEmail() != null && !request.getEmail().isBlank()) {
+            user.setEmail(request.getEmail().toLowerCase().trim());
+        }
+        if (request.getPhone() != null && !request.getPhone().isBlank()) {
+            user.setPhone(request.getPhone().trim());
+        }
+        if (request.getRole() != null && !request.getRole().isBlank()) {
+            user.setRole(request.getRole().toUpperCase().trim());
+        }
+        if (request.getActive() != null) {
+            user.setActive(request.getActive());
+        }
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
         User saved = userRepository.save(user);
         return new UserDTO(saved);
     }

@@ -5,6 +5,7 @@ import { Item, MatchResult } from '../../types';
 import { Badge } from '../../components/common/Badge';
 import { ClaimModal } from '../../components/common/ClaimModal';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
+import { ItemImagePlaceholder } from '../../components/common/ItemImagePlaceholder';
 import { useAuth } from '../../context/AuthContext';
 import {
   ArrowLeft,
@@ -82,10 +83,6 @@ export const ItemDetailsPage: React.FC = () => {
     );
   }
 
-  const defaultImage = item.type === 'LOST'
-    ? 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80'
-    : 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80';
-
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-12">
       
@@ -108,19 +105,20 @@ export const ItemDetailsPage: React.FC = () => {
       {/* Main Item Details Card */}
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-2">
         
-        {/* Left Column: Image */}
-        <div className="relative min-h-[320px] bg-slate-100 flex items-center justify-center">
-          <img
-            src={item.imageUrl || defaultImage}
-            alt={item.name}
-            className="w-full h-full object-cover"
-            onError={(e) => { (e.target as HTMLImageElement).src = defaultImage; }}
+        {/* Left Column: Image / Placeholder */}
+        <div className="relative min-h-[320px] bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+          <ItemImagePlaceholder
+            imageUrl={item.imageUrl}
+            name={item.name}
+            category={item.category}
+            type={item.type}
+            className="w-full h-full min-h-[320px]"
           />
-          <div className="absolute top-4 left-4 flex gap-2">
+          <div className="absolute top-4 left-4 flex gap-2 z-10">
             <Badge status={item.type} type="type" className="text-sm px-3 py-1 shadow-xs" />
             <Badge status={item.status} type="status" className="text-sm px-3 py-1 shadow-xs" />
           </div>
-          <div className="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-sm text-white text-xs font-mono px-3 py-1 rounded-lg">
+          <div className="absolute bottom-4 left-4 z-10 bg-slate-900/80 backdrop-blur-sm text-white text-xs font-mono px-3 py-1 rounded-lg">
             Record ID: {item.itemId}
           </div>
         </div>

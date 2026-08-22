@@ -39,16 +39,4 @@ public class ClaimController {
         return ResponseEntity.ok(claimService.getMyClaims(authentication.getName()));
     }
 
-    @GetMapping
-    public ResponseEntity<List<ClaimResponseDTO>> getAllClaims() {
-        return ResponseEntity.ok(claimService.getAllClaims());
-    }
-
-    @PutMapping("/{id}/status")
-    public ResponseEntity<ClaimResponseDTO> updateClaimStatus(
-            @PathVariable("id") Long id,
-            @RequestParam("status") String status
-    ) {
-        return ResponseEntity.ok(claimService.updateClaimStatus(id, status));
-    }
 }

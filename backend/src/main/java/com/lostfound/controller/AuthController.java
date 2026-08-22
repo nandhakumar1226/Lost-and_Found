@@ -37,4 +37,9 @@ public class AuthController {
         }
         return ResponseEntity.ok(authService.getCurrentUser(authentication.getName()));
     }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<UserDTO> resetPassword(@Valid @RequestBody com.lostfound.dto.ResetPasswordRequest request) {
+        return ResponseEntity.ok(authService.resetPassword(request));
+    }
 }

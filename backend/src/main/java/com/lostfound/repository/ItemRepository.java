@@ -23,6 +23,9 @@ public interface ItemRepository extends JpaRepository<Item, String> {
 
     long countByTypeAndStatus(String type, String status);
 
+    @Query("SELECT MAX(i.itemId) FROM Item i WHERE i.itemId LIKE 'LF-%'")
+    String findMaxItemId();
+
     @Query("SELECT i FROM Item i WHERE " +
            "(:type IS NULL OR i.type = :type) AND " +
            "(:category IS NULL OR i.category = :category) AND " +

@@ -24,15 +24,12 @@ public class ItemService {
     }
 
     private synchronized String generateNextItemId() {
-        List<Item> allItems = itemRepository.findAll();
+        String maxId = itemRepository.findMaxItemId();
         int max = 0;
-        for (Item item : allItems) {
-            if (item.getItemId() != null && item.getItemId().startsWith("LF-")) {
-                try {
-                    int num = Integer.parseInt(item.getItemId().substring(3));
-                    if (num > max) max = num;
-                } catch (NumberFormatException ignored) {}
-            }
+        if (maxId != null && maxId.startsWith("LF-")) {
+            try {
+                max = Integer.parseInt(maxId.substring(3));
+            } catch (NumberFormatException ignored) {}
         }
         return String.format("LF-%04d", max + 1);
     }
@@ -106,8 +103,22 @@ public class ItemService {
 
     @Transactional
     public ItemResponseDTO updateItemStatus(String itemId, String status) {
+        return updateItemStatus(itemId, status, null);
+    }
+
+    @Transactional
+    public ItemResponseDTO updateItemStatus(String itemId, String status, String currentUserEmail) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("Item not found with ID: " + itemId));
+
+        if (currentUserEmail != null) {
+            User currentUser = userRepository.findByEmail(currentUserEmail).orElse(null);
+            if (currentUser != null && !"ADMIN".equalsIgnoreCase(currentUser.getRole())) {
+                if (item.getUserId() == null || !item.getUserId().equals(currentUser.getUserId())) {
+                    throw new org.springframework.security.access.AccessDeniedException("You are not authorized to update this item.");
+                }
+            }
+        }
 
         item.setStatus(status.toUpperCase());
         Item saved = itemRepository.save(item);
@@ -116,9 +127,23 @@ public class ItemService {
 
     @Transactional
     public void deleteItem(String itemId) {
-        if (!itemRepository.existsById(itemId)) {
-            throw new IllegalArgumentException("Item not found with ID: " + itemId);
+        deleteItem(itemId, null);
+    }
+
+    @Transactional
+    public void deleteItem(String itemId, String currentUserEmail) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found with ID: " + itemId));
+
+        if (currentUserEmail != null) {
+            User currentUser = userRepository.findByEmail(currentUserEmail).orElse(null);
+            if (currentUser != null && !"ADMIN".equalsIgnoreCase(currentUser.getRole())) {
+                if (item.getUserId() == null || !item.getUserId().equals(currentUser.getUserId())) {
+                    throw new org.springframework.security.access.AccessDeniedException("You are not authorized to delete this item.");
+                }
+            }
         }
+
         itemRepository.deleteById(itemId);
     }
 }

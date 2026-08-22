@@ -27,16 +27,28 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Seed Admin Account
+        // Seed Admin Jegan Account
         if (userRepository.findByEmail("jegan@gmail.com").isEmpty()) {
-            User admin = new User();
-            admin.setName("Admin Jegan");
-            admin.setEmail("jegan@gmail.com");
-            admin.setPassword(passwordEncoder.encode("jegan123"));
-            admin.setPhone("9999999999");
-            admin.setRole("ADMIN");
-            userRepository.save(admin);
-            System.out.println(">>> Demo Admin user created: jegan@gmail.com / jegan123");
+            User adminJegan = new User();
+            adminJegan.setName("Admin Jegan");
+            adminJegan.setEmail("jegan@gmail.com");
+            adminJegan.setPassword(passwordEncoder.encode("jegan123"));
+            adminJegan.setPhone("9999999999");
+            adminJegan.setRole("ADMIN");
+            userRepository.save(adminJegan);
+            System.out.println(">>> Admin user created: jegan@gmail.com / jegan123");
+        }
+
+        // Seed Admin Nandha Account
+        if (userRepository.findByEmail("nandha@gmail.com").isEmpty()) {
+            User adminNandha = new User();
+            adminNandha.setName("Admin Nandha");
+            adminNandha.setEmail("nandha@gmail.com");
+            adminNandha.setPassword(passwordEncoder.encode("Nandha@2007"));
+            adminNandha.setPhone("9888888888");
+            adminNandha.setRole("ADMIN");
+            userRepository.save(adminNandha);
+            System.out.println(">>> Admin user created: nandha@gmail.com / Nandha@2007");
         }
 
         // Seed Demo Student Account

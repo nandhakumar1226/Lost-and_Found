@@ -3,44 +3,87 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
   body {
-    @apply bg-slate-50 text-slate-900 font-sans antialiased min-h-screen selection:bg-blue-100 selection:text-blue-900;
+    @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased min-h-screen transition-colors duration-300 selection:bg-indigo-500 selection:text-white;
+  }
+  
+  h1, h2, h3, h4, .font-display {
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
   }
 }
 
-/* Glass & Card Effects */
+@layer utilities {
+  /* Glassmorphism & Modern Elevation */
+  .glass-header {
+    @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 shadow-sm transition-all duration-300;
+  }
+
+  .glass-card {
+    @apply bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-xl dark:hover:shadow-indigo-950/30 transition-all duration-300 rounded-2xl;
+  }
+
+  .glass-panel {
+    @apply bg-slate-900/90 dark:bg-slate-900/95 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-3xl;
+  }
+
+  .glow-box-indigo {
+    box-shadow: 0 0 40px -10px rgba(99, 102, 241, 0.25);
+  }
+
+  .glow-box-emerald {
+    box-shadow: 0 0 40px -10px rgba(16, 185, 129, 0.25);
+  }
+
+  .glow-box-rose {
+    box-shadow: 0 0 40px -10px rgba(244, 63, 94, 0.25);
+  }
+
+  .gradient-text-primary {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-blue-600 to-violet-600 dark:from-indigo-400 dark:via-sky-400 dark:to-violet-400;
+  }
+
+  .gradient-text-hero {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-sky-200;
+  }
+
+  .gradient-text-emerald {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 dark:from-emerald-400 dark:to-teal-300;
+  }
+}
+
+/* Custom Component Classes */
 .college-card {
-  @apply bg-white border border-slate-200 rounded-xl shadow-sm transition-all hover:shadow-md;
+  @apply bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-xl dark:hover:shadow-indigo-950/40 transition-all duration-300 transform hover:-translate-y-1 overflow-hidden;
 }
 
 .btn-primary {
-  @apply inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-medium px-5 py-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md hover:shadow-indigo-500/25 transition-all duration-200 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95;
 }
 
 .btn-secondary {
-  @apply inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-5 py-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-slate-400 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold px-5 py-2.5 rounded-xl border border-slate-200/80 dark:border-slate-700 transition-all duration-200 focus:ring-2 focus:ring-slate-400 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95;
 }
 
 .btn-lost {
-  @apply inline-flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-medium px-5 py-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-rose-500 focus:ring-offset-1;
+  @apply inline-flex items-center justify-center gap-2 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md hover:shadow-rose-500/25 transition-all duration-200 focus:ring-2 focus:ring-rose-500 transform active:scale-95;
 }
 
 .btn-found {
-  @apply inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-5 py-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1;
+  @apply inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md hover:shadow-emerald-500/25 transition-all duration-200 focus:ring-2 focus:ring-emerald-500 transform active:scale-95;
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  @apply bg-slate-100 dark:bg-slate-950;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  @apply bg-slate-300 dark:bg-slate-800 rounded-full hover:bg-slate-400 dark:hover:bg-slate-700 transition-colors;
 }
